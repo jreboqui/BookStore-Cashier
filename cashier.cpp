@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include "cashier.h"
 
 using namespace std;
 
-int main()
+void cashier()
 {
     const double SALES_TAX = 0.06; //6% sales tax
     
@@ -23,6 +24,8 @@ int main()
     
         cout << "Serendipity Booksellers\n";
         cout << "Cashier Module\n\n";
+        
+        cin.ignore();
 
         cout << "Enter Date: ";
         getline(cin, date);  //takes input from cin and pass it to date variable   

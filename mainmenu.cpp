@@ -1,8 +1,12 @@
-/* This version, we are modifying the data validation, we check if the value
-/  is an integer that is 1-4, then we repeatedly show the menu until the user
-/  enters 4, which exits the program
+/* This version, we are converting it to a multi-file program and adding 
+/  header files(which will be created later. 
 */
 #include <iostream>
+//Include the header files
+#include "bookinfo.h"
+#include "cashier.h"
+#include "invmenu.h"
+#include "reports.h"
 
 using namespace std;
 
@@ -31,11 +35,11 @@ int main()
         {
             switch(choice)
             {
-                case 1: cout << "You selected 1 \n\n";
+                case 1: cashier();
                         break;
-                case 2: cout << "You selected 2 \n\n";
+                case 2: invMenu();
                         break;
-                case 3: cout << "You selected 3 \n\n";
+                case 3: reports();
                         break;
                 case 4: cout << "You selected 4 \n\n";
                         break;

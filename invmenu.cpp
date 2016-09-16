@@ -1,15 +1,16 @@
+#include "invmenu.h"
 #include <iostream>
 
 using namespace std;
 
-int main()
+void invMenu()
 {
     int choice;
 
     do
     {
         cout << "Serendipity Booksellers\n";
-        cout << "Invertory Database";
+        cout << "Invertory Database\n\n";
 
         cout << "\t1. Look-Up a Book\n";
         cout << "\t2. Add a Book\n";
@@ -26,13 +27,13 @@ int main()
         {
             switch(choice)
             {
-                case 1: cout << "\nYou selected 1 \n";
+                case 1: lookUpBook();
                         break;
-                case 2: cout << "\nYou selected 2 \n";
+                case 2: addBook();
                         break;
-                case 3: cout << "\nYou selected 3 \n";
+                case 3: editBook();
                         break;
-                case 4: cout << "\nYou selected 4 \n";
+                case 4: deleteBook(); 
                         break;
                 case 5: cout << "\nYou selected 5 \n";
                         break;
@@ -40,4 +41,25 @@ int main()
             }//end of switch
         } //end of else
     }while (choice != 5);
+
+}
+
+void lookUpBook()
+{
+    cout << "\nYou selected Look Up Book!\n";
+}
+
+void addBook()
+{
+    cout << "\nYou selected Add A  Book!\n";
+}
+
+void editBook()
+{
+    cout << "\nYou selected Edit Book!\n";
+}
+
+void deleteBook()
+{
+    cout << "\nYou selected Delete Book!";
 }
