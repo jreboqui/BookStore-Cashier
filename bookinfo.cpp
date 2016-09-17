@@ -1,20 +1,21 @@
 #include <iostream>
+#include "bookinfo.h"
 
 using namespace std;
 
-int main()
+void bookInfo()
 {
     cout << "Serendipity Booksellers\n";
-    cout << "Book Information";
+    cout << "Book Information\n";
 
-    cout << "ISBN: ";
-    cout << "Title: ";
-    cout << "Author: ";
-    cout << "Publisher: ";
-    cout << "Date Added: ";
-    cout << "Quantity-On-Hand: ";
-    cout << "Wholesale Cost: ";
-    cout << "Retail Price: ";
+    cout << "ISBN: \n";
+    cout << "Title: \n";
+    cout << "Author: \n";
+    cout << "Publisher: \n";
+    cout << "Date Added: \n";
+    cout << "Quantity-On-Hand: \n";
+    cout << "Wholesale Cost: \n";
+    cout << "Retail Price: \n\n";
 
     cout << "Enter Your Choice: ";
 
