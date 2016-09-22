@@ -9,6 +9,17 @@
 #include "reports.h"
 
 using namespace std;
+//Globals
+const int SIZE = 20;
+
+string bookTitle[SIZE];
+string isbn[SIZE];
+string author[SIZE];
+string publisher[SIZE];
+string dateAdded[SIZE];
+int qtyOnHand[SIZE];
+double wholesale[SIZE];
+double retail[SIZE];
 
 int main()
 {
