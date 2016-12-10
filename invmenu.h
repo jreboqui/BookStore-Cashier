@@ -1,4 +1,4 @@
-#ifndef INVMENU_H 
+#ifndef INVMENU_H
 #define INVMENU_H
 
 void invMenu();
@@ -8,4 +8,3 @@ void editBook();
 void deleteBook();
 
 #endif
-
