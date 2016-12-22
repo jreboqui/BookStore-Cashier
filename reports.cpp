@@ -3,19 +3,11 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include "bookdata.h"
 
 using namespace std;
 const int NUM_BOOKS = 20;
-const int STR_SIZE = 51;
-
-extern char bookTitle[NUM_BOOKS][STR_SIZE];
-extern char isbn[NUM_BOOKS][STR_SIZE];
-extern char author[NUM_BOOKS][STR_SIZE];
-extern char publisher[NUM_BOOKS][STR_SIZE];
-extern char dateAdded[NUM_BOOKS][STR_SIZE];
-extern int qtyOnHand[NUM_BOOKS];
-extern double wholesale[NUM_BOOKS];
-extern double retail[NUM_BOOKS];
+extern BookData book[NUM_BOOKS];
 
 
 void reports()
@@ -89,18 +81,18 @@ void repListing()
 
 	for (int i = 0; i < NUM_BOOKS; i++)
 	{
-		if (strcmp(isbn[i],end) != 0) //not printing empty records
+		if (strcmp(book[i].isbn,end) != 0) //not printing empty records
 		{
 			cout << "\n_____________________________________________________";
-			cout << "\n\nTitle:\t\t\t" << bookTitle[i];
-			cout << "\nISBN:\t\t\t" << isbn[i];
-			cout << "\nAuthor:\t\t\t" << author[i];
-			cout << "\nPublisher:\t\t" << publisher[i];
-			cout << "\nDate Added:\t\t" << dateAdded[i];
+			cout << "\n\nTitle:\t\t\t" << book[i].bookTitle;
+			cout << "\nISBN:\t\t\t" << book[i].isbn;
+			cout << "\nAuthor:\t\t\t" << book[i].author;
+			cout << "\nPublisher:\t\t" << book[i].publisher;
+			cout << "\nDate Added:\t\t" << book[i].dateAdded;
 			cout << fixed << showpoint << left << setprecision(2);
-			cout << "\nQuantity on Hand:\t" << qtyOnHand[i];
-			cout << "\nWholesale Cost: \t\t$ " << wholesale[i];
-			cout << "\nRetail Price:\t\t $" << retail[i];
+			cout << "\nQuantity on Hand:\t" << book[i].qtyOnHand;
+			cout << "\nWholesale Cost: \t\t$ " << book[i].wholesale;
+			cout << "\nRetail Price:\t\t $" << book[i].retail;
 		}
 	}
 
@@ -132,15 +124,15 @@ void repWholesale()
 
 	for (int i = 0; i < NUM_BOOKS; i++)
 	{
-		if (strcmp(isbn[i], end) != 0) //not printing empty records
+		if (strcmp(book[i].isbn, end) != 0) //not printing empty records
 		{
-			cout << "\n\t" << left << setw(26) << bookTitle[i];
-			cout << left << setw(14) << isbn[i];
-			cout << right << setw(6) << qtyOnHand[i] << "\t";
+			cout << "\n\t" << left << setw(26) << book[i].bookTitle;
+			cout << left << setw(14) << book[i].isbn;
+			cout << right << setw(6) << book[i].qtyOnHand << "\t";
 			cout << fixed << showpoint << right << setprecision(2);
-			cout << setw(6) << "\t$ " << wholesale[i];
+			cout << setw(6) << "\t$ " << book[i].wholesale;
 
-			itemSubTotal = qtyOnHand[i] * wholesale[i];
+			itemSubTotal = book[i].qtyOnHand * book[i].wholesale;
 			subTotal += itemSubTotal;
 		}
 	}
@@ -174,15 +166,15 @@ void repRetail()
 
 	for (int i = 0; i < NUM_BOOKS; i++)
 	{
-		if (strcmp(isbn[i], end) != 0) //not printing empty records
+		if (strcmp(book[i].isbn, end) != 0) //not printing empty records
 		{
-			cout << "\n\t" << left << setw(26) << bookTitle[i];
-			cout << left << setw(14) << isbn[i];
-			cout << right << setw(6) << qtyOnHand[i] << "\t";
+			cout << "\n\t" << left << setw(26) << book[i].bookTitle;
+			cout << left << setw(14) << book[i].isbn;
+			cout << right << setw(6) << book[i].qtyOnHand << "\t";
 			cout << fixed << showpoint << right << setprecision(2);
-			cout << setw(6) << "\t$ " << retail[i];
+			cout << setw(6) << "\t$ " << book[i].retail;
 
-			itemSubTotal = qtyOnHand[i] * retail[i];
+			itemSubTotal = book[i].qtyOnHand * book[i].retail;
 			subTotal += itemSubTotal;
 		}
 	}
@@ -207,7 +199,7 @@ void repQty()
 	{
 		id[i] = i;
 		idPtr[i] = &id[i];
-		qtyPtr[i] = &qtyOnHand[i];
+		qtyPtr[i] = &book[i].qtyOnHand;
 	}
 
 	int startScan;
@@ -252,10 +244,10 @@ void repQty()
 	char end[] = { '\0' };
 	for (int j = 0; j < NUM_BOOKS; j++)
 	{
-		if (strcmp(isbn[j], end) != 0) //not printing empty records
+		if (strcmp(book[j].isbn, end) != 0) //not printing empty records
 		{
-			cout << "\n\t" << left << setw(26) << bookTitle[*(idPtr[j])];
-			cout << left << setw(14) << isbn[*(idPtr[j])];
+			cout << "\n\t" << left << setw(26) << book[*(idPtr[j])].bookTitle;
+			cout << left << setw(14) << book[*(idPtr[j])].isbn;
 			cout << right << setw(6) << *qtyPtr[j] << "\n";
 		}
 	}
@@ -279,7 +271,7 @@ void repCost()
 	{
 		id[i] = i;
 		idPtr[i] = &id[i];
-		wholePtr[i] = &wholesale[i];
+		wholePtr[i] = &book[i].wholesale;
 	}
 
 	int startScan;
@@ -324,12 +316,12 @@ void repCost()
 	char end[] = { '\0' };
 	for (int j = 0; j < NUM_BOOKS; j++)
 	{
-		if (strcmp(isbn[j], end) != 0) //not printing empty records
+		if (strcmp(book[j].isbn, end) != 0) //not printing empty records
 		{
-			cout << "\n\t" << left << setw(26) << bookTitle[*(idPtr[j])];
-			cout << left << setw(14) << isbn[*(idPtr[j])];
+			cout << "\n\t" << left << setw(26) << book[*(idPtr[j])].bookTitle;
+			cout << left << setw(14) << book[*(idPtr[j])].isbn;
 			cout << fixed << showpoint << right << setprecision(2);
-			cout << right << setw(6) << qtyOnHand[j];
+			cout << right << setw(6) << book[j].qtyOnHand;
 			cout << setw(6) << "\t$ " << *wholePtr[j] << "\n";
 		}
 	}
@@ -354,7 +346,7 @@ void repAge()
 	{
 		id[i] = i;
 		idPtr[i] = &id[i];
-		datePtr[i] = dateAdded[i];
+		datePtr[i] = book[i].dateAdded;
 	}
 
 	int startScan;
@@ -399,13 +391,13 @@ void repAge()
 	char end[] = { '\0' };
 	for (int j = 0; j < NUM_BOOKS; j++)
 	{
-		if (strcmp(isbn[j], end) != 0) //not printing empty records
+		if (strcmp(book[j].isbn, end) != 0) //not printing empty records
 		{
-			cout << "\n\t" << left << setw(26) << bookTitle[*(idPtr[j])];
-			cout << left << setw(14) << isbn[*(idPtr[j])];
+			cout << "\n\t" << left << setw(26) << book[*(idPtr[j])].bookTitle;
+			cout << left << setw(14) << book[*(idPtr[j])].isbn;
 			cout << fixed << showpoint << right << setprecision(2);
-			cout << right << setw(6) << qtyOnHand[j];
-			cout << setw(6) << "\t$ " << dateAdded[*(idPtr[j])] << "\n";
+			cout << right << setw(6) << book[j].qtyOnHand;
+			cout << setw(6) << "\t " << book[*(idPtr[j])].dateAdded << "\n";
 		}
 	}
 

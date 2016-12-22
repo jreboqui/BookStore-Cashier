@@ -46,6 +46,7 @@ void setQty(int newQuantity, int subscript)
 void setWholesale(double newWholesale, int subscript){
 
     book[subscript].wholesale = newWholesale;
+
 }
 void setRetail(double newRetail, int subscript){
 
