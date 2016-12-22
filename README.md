@@ -10,3 +10,7 @@ Most of the functions are now working except some parts of the reports. We use l
 
 --Edit 2 10/21/206
 Added the reports functionality: generates a report based on the user selection. report can be by cost, by sale value, or by date added. to sort the books, I implemented a simple selection sort.
+
+Turns out I forgot to update readme and I don;t know where it is now. Updated the whole structure so it is now using struct(well class) instead of arrays for the books data.
+
+--I think I made a mistake and merged the old ones? Gosh.
