@@ -22,7 +22,7 @@ void setAuthor(char*,int);
 void setPub(char*, int);
 void setDateAdded(char*, int);
 void setQty(int, int);
-void setwholesale(double, int);
+void setWholesale(double, int);
 void setRetail(double, int);
 int isEmpty(int);
 void removeBook(int);

@@ -1,295 +1,360 @@
 #include "invmenu.h"
 #include "bookinfo.h"
+#include <cstring>
 #include <iostream>
+#include "strupper.h"
+#include "bookdata.h"
 
 using namespace std;
-const int SIZE = 20;
-extern string bookTitle[SIZE];
-extern string isbn[SIZE];
-extern string author[SIZE];
-extern string publisher[SIZE];
-extern string dateAdded[SIZE];
-extern int qtyOnHand[SIZE];
-extern double wholesale[SIZE];
-extern double retail[SIZE];
+const int NUM_BOOKS = 20;
+extern BookData book[NUM_BOOKS];
 
 void invMenu()
 {
-    int choice;
+	int choice = 0;
 
-    do
-    {
-        cout << "Serendipity Booksellers\n";
-        cout << "Invertory Database\n\n";
+	while (choice != 5)
+	{
+		cout << "Serendipity Booksellers\n";
+		cout << "   Inventory Database\n\n";
 
-        cout << "\t1. Look-Up a Book\n";
-        cout << "\t2. Add a Book\n";
-        cout << "\t3. Edit a Book's Record\n";
-        cout << "\t4. Delete a Book\n";
-        cout << "\t5. Return to the Main Menu\n";
+		cout << "1. Look Up a Book\n";
+		cout << "2. Add a Book\n";
+		cout << "3. Edit a Book's Record\n";
+		cout << "4. Delete a Book\n";
+		cout << "5. Return to the Main Menu\n\n";
 
-        cout << "Enter Your Choice: ";
-        //Data Validation
-        cin >> choice;
-        if (choice > 5)
-            cout << "\nPlease enter a valid number 1-5\n";
-        else
-        {
-            switch(choice)
-            {
-                case 1: lookUpBook();
-                        break;
-                case 2: addBook();
-                        break;
-                case 3: editBook();
-                        break;
-                case 4: deleteBook(); 
-                        break;
-                case 5: cout << "\nYou selected 5 \n";
-                        break;
-    
-            }//end of switch
-        } //end of else
-    }while (choice != 5);
+		cout << "Enter Your Choice: ";
+		cin >> choice;
 
+
+		//validate input
+		while (choice < 1 || choice > 5)
+		{
+			cout << "\nPlease enter a number in the range 1 - 5\n";
+			cout << "Enter your choice: ";
+			cin >> choice;
+		}
+
+		switch (choice)
+		{
+		case 1:
+			lookUpBook();
+			break;
+		case 2:
+			addBook();
+			break;
+		case 3:
+			editBook();
+			break;
+		case 4:
+			deleteBook();
+			break;
+		case 5:
+			cout << "\nYou selected item 5";
+			break;
+		}
+
+		cout << endl;
+	}//end while choice !=5
 }
 
 void lookUpBook()
 {
-    bool found = false;
-    int index = 0;
-    string searchTitle;
-    
-    cin.ignore(); //ignore the newline from menu
+	char YesNo = ' ';
+	int row = 0;
+	char title[STR_SIZE];
 
-    cout << "Enter the title of the book to search for: ";
-    getline(cin, searchTitle);
+	cin.ignore();
 
-    while (!found & index < SIZE)
-    {
-        if (bookTitle[index] == searchTitle)
-            found = true;
-        else
-            index++;
-    }
-    if (found)
-    {
-        bookInfo(isbn[index], bookTitle[index], author[index],
-        publisher[index], dateAdded[index], qtyOnHand[index],
-        wholesale[index], retail[index]);
-    }
-    else
-         cout << "The book you searched for is not in the inventory" << endl;
+	cout << "Enter the title of the book to search for: ";
+	cin.getline(title, STR_SIZE);
+
+	strUpper(title);
+
+	for (row = 0; row < NUM_BOOKS; row++)
+	{
+		if (strstr(book[row].bookTitle,title))
+		{
+			cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+			cout << "Is this a correct match? (Y or N)  ";
+			cin >> YesNo;
+
+			while (YesNo != 'Y' && YesNo != 'y' && YesNo != 'N' && YesNo != 'n')
+			{
+				cout << "Please enter Y or N\n\n";
+				cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+				cout << "Is this a correct match? (Y or N)  ";
+				cin >> YesNo;
+			}
+
+			if (YesNo == 'Y' || YesNo == 'y')
+			{
+				bookInfo(book[row].isbn, book[row].bookTitle, book[row].author, book[row].publisher,
+					book[row].dateAdded, book[row].qtyOnHand, book[row].wholesale, book[row].retail);
+				break;
+			}
+		}
+	}
+	if (row > NUM_BOOKS -1)
+		cout << "The book you searched for is not in the inventory" << endl;
+
 }
 
 void addBook()
 {
-    bool found = false;
-    int index = 0;
+	char title[STR_SIZE];
+    char isbn[STR_SIZE];
+    char publisher[STR_SIZE];
+    char date[STR_SIZE];
+    char author[STR_SIZE];
+    int quantity;
+    double wholesale;
+    double retail;
+    int row;
 
-    while (!found & index < SIZE)
-    {
-        if (bookTitle[index] == "")
-            found = true;
-        else
-            index++;
-    }
-    
-    if (found) //book doesn't exist
-    {
-        cin.ignore();
-        cout << "\nEnter Title: ";
-        getline(cin, bookTitle[index]);
+    for (row = 0; row < NUM_BOOKS; row++)
+	{
+		//find the first book whose element is 0
+		if (isEmpty(row))
+		{
+			cin.ignore();
+			cout << "Enter Title: ";
+			cin.getline(title, STR_SIZE);
+			setTitle(title, row);
 
-        cout << "\nEnter ISBN: ";
-        getline(cin, isbn[index]);
+			cout << "Enter ISBN :";
+			cin.getline(isbn, STR_SIZE);
+			setISBN(isbn, row);
 
-        cout << "\nEnter ISBN: ";
-        getline(cin, isbn[index]);
+			cout << "Enter Author :";
+			cin.getline(author, STR_SIZE);
+			setAuthor(author, row);
 
-        cout << "\nEnter Author: ";
-        getline(cin, author[index]);
-        
-        cout << "\nEnter Publisher: ";
-        getline(cin, publisher[index]);
+			cout << "Enter Publisher :";
+			cin.getline(publisher, STR_SIZE);
+			setPub(publisher, row);
 
-        cout << "\nEnter Date added to Inventory: ";
-        getline(cin, dateAdded[index]);
+			cout << "Enter Date Added to Inventory :";
+			cin.getline(date, STR_SIZE);
+			setDateAdded(date, row);
 
-        cout << "\nEnter Quantity Added: ";
-        cin >> qtyOnHand[index];
+			cout << "Enter Quantity Added :";
+			cin >> quantity;
+            setQty(quantity, row);
 
-        cout << "\nEnter Wholesale Price: ";
-        cin >> wholesale[index];
+			cout << "Enter Wholesale Price :";
+			cin >> wholesale;
+            setWholesale(wholesale, row);
 
-        cout << "\nEnter Retail Price: ";
-        cin >> retail[index];
+			cout << "Enter Retail Price:";
+			cin >> retail;
+            setRetail(retail, row);
 
-        cout << "\n\nRecord saved.";
-
-    }
-    else
-        cout << "No more books may be added\n";
+			cout << "\n\nRecord was entered.";
+			break;
+		} //end if	
+		cout << "No more books may be added\n";
+	} //end for loop
 }
 
 void editBook()
 {
-    bool found = false;
-    int index = 0;
-    int choice = 0;
-    string searchTitle;
-    
-    cin.ignore();
-    
-    cout << "Enter the title of the book to edit: ";
-    getline(cin, searchTitle);
+	
+	char title[STR_SIZE];
+    char isbn[STR_SIZE];
+    char publisher[STR_SIZE];
+    char date[STR_SIZE];
+    char author[STR_SIZE];
+    int quantity;
+    double wholesale;
+    double retail;
+    int row;
+	int choice = 0;
+	char YesNo = ' ';
 
-    while (!found & index < SIZE)
-    {
-        if (bookTitle[index] == searchTitle)
-            found = true;
-        else
-            index++;
-    }
+	cin.ignore();
 
-    if (found)
-    {
-        bookInfo(isbn[index], bookTitle[index], author[index],
-        publisher[index], dateAdded[index], qtyOnHand[index],
-        wholesale[index], retail[index]);
-        
-        do
-        {
-            cout << "\nYou mayedit any of the following: " << endl;
-            cout << "1. ISBN\n";
-            cout << "2. Title\n";
-            cout << "3. Author\n";
-            cout << "4. Publisher\n";
-            cout << "5. Date book was added to inventory\n";
-            cout << "6. Quantity on hand\n";
-            cout << "7. Wholesale cost\n";
-            cout << "8. Retail Price\n";
-            cout << "9. Exit\n\n";
-            cin >> choice;
+	cout << "Enter thetitle of the book to edit: ";
+	cin.getline(title, STR_SIZE);
+	strUpper(title);
 
-            while (choice < 1 || choice > 9)
-            {
-                cout << "\nPlease enter a number in the range 1-9";
-                cout << "Enter your choice: ";
-                cin >> choice;
-            }//end of while loop
-            
-            switch(choice)
-            {
-            case 1:
-                cout << "\nCurrent ISBN: ";
-                cout << isbn[index] << endl;
-                cin.ignore();
-                cout << "Enter new ISBN: ";
-                cin >> isbn[index];
-                break;
-            case 2:
-                cout << "\nCurrent Title: ";
-                cout << bookTitle[index] << endl;
-                cin.ignore();
-                cout << "Enter new Title: ";
-                getline(cin, bookTitle[index]);
-                break;
-            case 3:
-                cout << "\nCurrent Author: ";
-                cout << author[index] << endl;
-                cin.ignore();
-                cout << "Enter new Author: ";
-                getline(cin, author[index]);
-                break;
-            case 4:
-                cout << "\nPublisher: ";
-                cout << publisher[index] << endl;
-                cin.ignore();
-                cout << "Enter new Publisher: ";
-                getline(cin, publisher[index]);
-                break;
-            case 5:
-                cout << "\nCurrent Date Added: ";
-                cout << dateAdded[index] << endl;
-                cin.ignore();
-                cout << "Enter new Date: ";
-                getline(cin, dateAdded[index]);
-                break;
-            case 6:
-                cout << "\nCurrent Quantity on Hand: ";
-                cout << qtyOnHand[index] << endl;
-                cin.ignore();
-                cout << "Enter new Quantity on Hand: ";
-                cin >> qtyOnHand[index];
-                break;
-            case 7:
-                cout << "\nCurrent Wholesale Cost: ";
-                cout << wholesale[index] << endl;
-                cin.ignore();
-                cout << "Enter new Wholesale Cost: ";
-                cin >> wholesale[index];
-                break;
-            case 8:
-                cout << "\nCurrent Retail Price: ";
-                cout << retail[index] << endl;
-                cin.ignore();
-                cout << "Enter new Retail Price: ";
-                cin >> retail[index];
-                break;
-            
-            }//end of switch
+	for (row = 0; row < NUM_BOOKS; row++)
+	{
+		if (strstr(book[row].bookTitle, title))
+		{
+			cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+			cout << "Is this a correct match? (Y or N)  ";
+			cin >> YesNo;
 
+			while (YesNo != 'Y' && YesNo != 'y' && YesNo != 'N' && YesNo != 'n')
+			{
+				cout << "Please enter Y or N\n\n";
+				cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+				cout << "Is this a correct match? (Y or N)  ";
+				cin >> YesNo;
+			}
 
-        }//end do
-        while (choice != 9);
-    }//end of big if
-    else
-        cout << "The book you searched for is not in the inventory\n\n";       
+			if (YesNo == 'Y' || YesNo == 'y')
+			{
+				bookInfo(book[row].isbn, book[row].bookTitle, book[row].author, book[row].publisher,
+					book[row].dateAdded, book[row].qtyOnHand, book[row].wholesale, book[row].retail);
 
+				do
+				{
+					cout << "\nYou may edit any of the following: " << endl;
+					cout << "1. ISBN\n";
+					cout << "2. Title\n";
+					cout << "3. Author\n";
+					cout << "4. Publisher\n";
+					cout << "5. Date book was added to inventory\n";
+					cout << "6. Quantity on hand\n";
+					cout << "7. Wholesale cost\n";
+					cout << "8. Retail Price\n";
+					cout << "9. Exit\n\n";
+					cin >> choice;
+
+					while (choice < 1 || choice > 9)
+					{
+						cout << "\nPlease enter a number in the range between 1 and 9." << endl;
+						cout << "Enter your choice :";
+						cin >> choice;
+					}
+
+					switch (choice)
+					{
+					case 1:
+						cout << "\nCurrent ISBN: ";
+						cout << book[row].isbn << endl;
+						cin.ignore();
+						cout << "Enter new ISBN: ";
+						cin.getline(isbn, STR_SIZE);
+						setISBN(isbn, row);
+						break;
+					case 2:
+						cout << "\nCurrent Title: ";
+						cout << book[row].bookTitle << endl;
+						cin.ignore();
+						cout << "Enter new Title: ";
+						cin.getline(title, STR_SIZE);
+						setTitle(title, row);
+						break;
+					case 3:
+						cout << "\nCurrent Author: ";
+						cout << book[row].author << endl;
+						cin.ignore();
+						cout << "Enter new Author: ";
+						cin.getline(author, STR_SIZE);
+						setAuthor(author, row);
+						break;
+					case 4:
+						cout << "\nCurrent Publisher: ";
+						cout << book[row].publisher << endl;
+						cin.ignore();
+						cout << "Enter new Publisher: ";
+						cin.getline(publisher, STR_SIZE);
+						setPub(publisher, row);
+						break;
+					case 5:
+						cout << "\nCurrent Date Added: ";
+						cout << book[row].dateAdded << endl;
+						cin.ignore();
+						cout << "Enter new Date: ";
+						cin.getline(date, STR_SIZE);
+						setDateAdded(date, row);
+						break;
+					case 6:
+						cout << "\nCurrent Quantity on Hand: ";
+						cout << book[row].qtyOnHand << endl;
+						cin.ignore();
+						cout << "Enter new Quantity On Hand: ";
+						cin >> quantity;
+                        setQty(quantity, row);
+						break;
+					case 7:
+						cout << "\nCurrent Wholesale Cost: ";
+						cout << book[row].wholesale << endl;
+						cin.ignore();
+						cout << "Enter new Wholesale Cost: ";
+						cin >> wholesale;
+                        setWholesale(wholesale, row);
+						break;
+					case 8:
+						cout << "\nCurrent Retail Price: ";
+						cout << book[row].retail << endl;
+						cin.ignore();
+						cout << "Enter new Retail Price: ";
+						cin >> retail;
+                        setRetail(retail, row);
+						break;
+					}
+				} while (choice != 9);
+				break;
+			}// end if yesno
+		}
+	} //end for loop
+	if (row > NUM_BOOKS - 1)
+		cout << "\nSorry, no title matching: " << title << " was found\n\n";
 }
+
 
 void deleteBook()
 {
+	char title[STR_SIZE];
+	int row = 0;
+	char YesNo = ' ';
 
-    bool found = false;
-    int index = 0;
-    string searchTitle;
-    char confirm;
+	cin.ignore();
 
-    cin.ignore();
+	cout << "Enter the title of the book to delete: ";
+	cin.getline(title,STR_SIZE);
 
-    cout << "Enter the title of the book you want to delete: ";
-    getline(cin, searchTitle);
+	strUpper(title);
 
-    while (!found & index < SIZE)
-    {
-        if (bookTitle[index] == searchTitle)
-            found = true;
-        else
-            index++;
-    }
-    if (found)
-    {
-        bookInfo(isbn[index], bookTitle[index], author[index],
-        publisher[index], dateAdded[index], qtyOnHand[index],
-        wholesale[index], retail[index]);
-     
-        cout << "Are you sure you want to delete this book from the inventory?";
-        cin >> confirm;
+	for (row = 0; row < NUM_BOOKS; row ++)
+	{
+		if (strstr(book[row].bookTitle, title))
+		{
+			cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+			cout << "Is this a correct match? (Y or N)  ";
+			cin >> YesNo;
 
-        if (confirm == 'Y' || confirm == 'y')
-        {
-            bookTitle[index] = "";
-            isbn[index] = "";
-            author[index] = "";
-            publisher[index] = "";
-            dateAdded[index] = "";
-            qtyOnHand[index] = 0;
-            wholesale[index] = 0;
-            retail[index] = 0;
-        }   
-    } 
-    else
-        cout << "Book not found!\n\n";
+			while (YesNo != 'Y' && YesNo != 'y' && YesNo != 'N' && YesNo != 'n')
+			{
+				cout << "Please enter Y or N\n\n";
+				cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+				cout << "Is this a correct match? (Y or N)  ";
+				cin >> YesNo;
+			}
+
+			if (YesNo == 'Y' || YesNo == 'y')
+			{
+
+				bookInfo(book[row].isbn, book[row].bookTitle, book[row].author, book[row].publisher,
+					book[row].dateAdded, book[row].qtyOnHand, book[row].wholesale, book[row].retail);
+
+				cout << "Would you like to delete entire record? Y/N: ";
+				cin >> YesNo;
+
+				while (YesNo != 'Y' && YesNo != 'y' && YesNo != 'N' && YesNo != 'n')
+				{
+					cout << "Please enter Y or N\n\n";
+					cout << "\nPossible Match found: " << book[row].bookTitle << "\n\n";
+					cout << "Would you like to delete entire record? Y/N: ";
+					cin >> YesNo;
+				}
+
+				if (YesNo == 'Y' || YesNo == 'y')
+				{
+					removeBook(row);
+					cout << "\nRecord was deleted\n";
+				}
+				else
+					cout << "\nRecord was NOT deleted\n";
+				break;
+			}			
+		}
+	}
+	if (row > NUM_BOOKS - 1)
+		cout << "\nSorry, no title matching: " << title << " was found\n\n";
 }
